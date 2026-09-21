@@ -29,23 +29,6 @@ organizational (50 services, N sources), not raw throughput.
 
 ![Architecture diagram](images/travel-platform-diagram.png)
 
-```mermaid
-flowchart TD
-    U[Users] <-- "WebSocket: statuses, tokens, provenance" --> GW[API Gateway]
-    AUTH[Auth Service - OpenID Connect] --- GW
-    GW <--> ORC["Agent Orchestrator (intent -> plan -> execute)"]
-    REG["Service Registry + LLM tool catalog"] --- ORC
-    MEM[(Session store / user profile)] --- ORC
-    LLM[LLM] --- ORC
-    ORC <-- gRPC --> REV[Revenue]
-    ORC <-- gRPC --> BOOK[Booking]
-    ORC <-- gRPC --> TRV[Travel]
-    REV & BOOK & TRV --> FED["Federation Layer: facade, adapters, TTL cache, row/col filters"]
-    FED --> PG[(Relational DB)]
-    FED --> NOSQL[(NoSQL DB)]
-    FED --> CSV[(CSV / files)]
-    ORC -. audit events .-> AUD[(Audit log)]
-```
 
 Invariant worth saying out loud: **the only road to data is the
 federation facade** — neither agents nor business services hold direct
